@@ -8,11 +8,63 @@ function findNeighbors(node, matrix) {
     // Right
 
     // Your code here
-}
+    const neighbors = [];
+    const [row, column] = node;
 
+    if (row > 0) {
+        const up = [row - 1, column];
+        neighbors.push(up);
+    }
+    
+    if (row < matrix.length - 1) {
+        const down = [row + 1, column];
+        neighbors.push(down);
+    }
+    
+    
+    if (column > 0) {
+        const left = [row, column - 1];
+        neighbors.push(left);
+    }
+
+    if (column < matrix[row].length - 1) {
+        const right = [row, column + 1];
+        neighbors.push(right)
+    }
+
+    return neighbors;
+}
 
 function bfsPath(matrix, startNode, endValue) {
     // Your code here
+    if (matrix[startNode[0]][startNode[1]] === endValue) return [startNode]
+
+    const queue = [[startNode]];
+    const visited = new Set([startNode.join(',')]);
+    const resultPath = [startNode];
+
+    while (queue.length > 0) {
+        const currentPath = queue.shift();
+        const currentNode = currentPath[currentPath.length - 1];
+        const neighbors = findNeighbors(currentNode, matrix);
+
+        for (let i = 0; i < neighbors.length; i++) {
+            const neighbor = neighbors[i];
+            const path = [...currentPath, neighbor]; 
+
+            if (!visited.has(neighbor.join(','))) {
+                queue.push(path);
+                visited.add(neighbor.join(','));
+                resultPath.push(neighbor);
+
+                if (matrix[neighbor[0]][neighbor[1]] === endValue) {                
+                    return resultPath;
+                };
+            }
+        }
+    }
+
+    return false;
 }
 
 
